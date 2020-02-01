@@ -1,86 +1,63 @@
+package Sorts;
 
 /**
- *
  * @author Mateus Bizzo (https://github.com/MattBizzo)
- *
+ * @author Podshivalov Nikita (https://github.com/nikitap492)
  */
 
-class CocktailShakerSort {
-	/**
-	 * This method implements the Generic Cocktail Shaker Sort
-	 *
-	 * @param array
-	 *            The array to be sorted
-	 * @param last
-	 *            The count of total number of elements in array Sorts the array in
-	 *            increasing order
-	 **/
+class CocktailShakerSort implements SortAlgorithm {
 
-	public static <T extends Comparable<T>> void CS(T array[], int last) {
-		
-		// Sorting
-		boolean swap;
-		do {
-			swap = false;
-			
-			//front
-			for (int count = 0; count <= last - 2; count++) {
-				int comp = array[count].compareTo(array[count + 1]);
-				if (comp > 0) {
-					T aux = array[count];
-					array[count] = array[count + 1];
-					array[count + 1] = aux;
-					swap = true;
-				}
-			}
-			//break if no swap occurred
-			if (!swap) {
-				break;
-			}
-			swap = false;
-			
-			//back
-			for (int count = last - 2; count >= 0; count--) {
-				int comp = array[count].compareTo(array[count + 1]);
-				if (comp > 0) {
-					T aux = array[count];
-					array[count] = array[count + 1];
-					array[count + 1] = aux;
-					swap = true;
-				}
-			}
-			last--;
-		//end
-		} while (swap);
-	}
+    /**
+     * This method implements the Generic Cocktail Shaker Sort
+     *
+     * @param array The array to be sorted
+     *              Sorts the array in increasing order
+     **/
 
-	// Driver Program
-	public static void main(String[] args) {
-		// Integer Input
-		int[] arr1 = { 4, 23, 6, 78, 1, 54, 231, 9, 12 };
-		int last = arr1.length;
-		Integer[] array = new Integer[last];
-		for (int i = 0; i < last; i++) {
-			array[i] = arr1[i];
-		}
+    @Override
+    public <T extends Comparable<T>> T[] sort(T[] array) {
 
-		CS(array, last);
+        int length = array.length;
+        int left = 0;
+        int right = length - 1;
+        int swappedLeft, swappedRight;
+        while (left < right) {
+            // front
+            swappedRight = 0;
+            for (int i = left; i < right; i++) {
+                if (SortUtils.less(array[i + 1], array[i])) {
+                    SortUtils.swap(array, i, i + 1);
+                    swappedRight = i;
+                }
+            }
+            // back
+            right = swappedRight;
+            swappedLeft = length - 1;
+            for (int j = right; j > left; j--) {
+                if (SortUtils.less(array[j], array[j - 1])) {
+                    SortUtils.swap(array, j - 1, j);
+                    swappedLeft = j;
+                }
+            }
+            left = swappedLeft;
+        }
+        return array;
 
-		// Output => 1 4 6 9 12 23 54 78 231
-		for (int i = 0; i < last; i++) {
-			System.out.print(array[i] + "\t");
-		}
-		System.out.println();
+    }
 
-		// String Input
-		String[] array1 = { "c", "a", "e", "b", "d" };
-		last = array1.length;
+    // Driver Program
+    public static void main(String[] args) {
+        // Integer Input
+        Integer[] integers = {4, 23, 6, 78, 1, 54, 231, 9, 12};
+        CocktailShakerSort shakerSort = new CocktailShakerSort();
 
-		CS(array1, last);
+        // Output => 1 4 6 9 12 23 54 78 231
+        SortUtils.print(shakerSort.sort(integers));
 
-		// Output => a b c d e
-		for (int i = 0; i < last; i++) {
-			System.out.print(array1[i] + "\t");
-		}
-	}
+        // String Input
+        String[] strings = {"c", "a", "e", "b", "d"};
+        SortUtils.print(shakerSort.sort(strings));
+    }
+
+
 }
